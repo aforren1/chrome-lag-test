@@ -15,4 +15,3 @@ Teensy 4 has a phototransistor
    - Expect teensy or not (& get WebHID validation out of the way? https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API)
    - desynchronized canvas
    - save data? (download json)
-   
