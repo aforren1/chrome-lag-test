@@ -2,6 +2,7 @@
 Modified from https://github.com/luni64/TeensyTimerTool/wiki/Configuration#clock-setting-for-the-gpt-and-pit-timers
 
 set the scaling of TMR to 4 (max period of ~1.75 ms)
+use GPT with 150MHz clock
 disable time literals
 */
 

@@ -4,7 +4,7 @@
 #include "TeensyTimerTool.h"
 
 namespace ttt = TeensyTimerTool;
-// use TMR channel with 4x prescaling
+// use GPT1 with 150MHz clock (lower jitter than TMR?)
 
 // drives sampling from the ADC
 ttt::PeriodicTimer t1(ttt::GPT1); // max period ~1.747 ms (see include/userConfig.h)
@@ -85,6 +85,7 @@ void loop() {
     0x00 = return to idle state, and dump data
     0x01 = start sampling from idle
     0x02 = rAF started (reset the sample counter)
+    0x03 = return 8 more observations to computer
     */
     int n = RawHID.recv(rx_buffer, 50); // wait for up to 50 ms
     if (n > 0) {
