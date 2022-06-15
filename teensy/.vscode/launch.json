@@ -12,9 +12,9 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/home/adf/js/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
+            "executable": "c:/Users/aforr/Documents/web/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
             "projectEnvName": "teensy40",
-            "toolchainBinDir": "/home/adf/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aforr/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -25,18 +25,18 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/home/adf/js/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
+            "executable": "c:/Users/aforr/Documents/web/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
             "projectEnvName": "teensy40",
-            "toolchainBinDir": "/home/adf/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aforr/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "/home/adf/js/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
+            "executable": "c:/Users/aforr/Documents/web/chrome-lag-test/teensy/.pio/build/teensy40/firmware.elf",
             "projectEnvName": "teensy40",
-            "toolchainBinDir": "/home/adf/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aforr/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
         }
