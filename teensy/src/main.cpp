@@ -34,8 +34,8 @@ enum class State {
 auto current_state = State::idle;
 
 struct obs {
-    uint32_t counter;
-    uint32_t sample_counter; // sample count; reset every 
+    uint32_t counter; // increases by 1 count per sample
+    uint32_t sample_counter; // within sample count; reset every 
     uint16_t photo; // raw phototransistor value, 0-2^16 (but probably more restricted than that)
 };
 
@@ -51,7 +51,15 @@ uint32_t sample_counter = 0;
 uint32_t set_pt = 0;
 
 void loop() {
+    uint32_t new_data = Serial.available();
+    uint8_t new_byte = 0;
+    if (new_data) {
+        new_byte = Serial.read();
+    }
     if (current_state == State::idle) {
+        if (new_data && new_byte == 0x01) {
+            // start sampling
+        }
     }
 
     if (current_state == State::sampling) {
@@ -61,6 +69,7 @@ void loop() {
         const auto idx = counter % MAX_BUFFER_SIZE;
         samples[idx].counter = counter;
         samples[idx].sample_counter = sample_counter;
+
 
     }
     uint16_t photo_val = adc->adc0->analogRead(photo_pin);
