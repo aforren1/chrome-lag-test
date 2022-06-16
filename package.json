@@ -17,7 +17,6 @@
     "license": "MIT",
     "homepage": "https://github.com/aforren1/esbuild-test#readme",
     "devDependencies": {
-        "esbuild": "^0.14.43",
-        "twgl-base.js": "4.22.1"
+        "esbuild": "^0.14.43"
     }
 }
