@@ -1,0 +1,51 @@
+<!-- minimally demonstrate webHID to myself -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Click to start</title>
+</head>
+<body>
+<script>
+const filter = [{
+    vendorId: 0x16c0,
+    productId: 0x486,
+    usagePage: 0xffab,
+    usage: 0x200
+}]
+
+window.addEventListener('load', async () => {
+
+})
+
+const hidTest = async () => {
+    window.removeEventListener('click', hidTest)
+    try {
+        const devices = await navigator.hid.requestDevice({ filters: filter })
+        console.log(devices) // should only have one at this point
+        const device = devices[0]
+        await device.open()
+        console.log(device)
+        device.addEventListener('inputreport', async (event) => {
+            console.log(event.data)
+            await device.sendReport(0x00, new Uint8Array([0x03]))
+        })
+
+        await device.sendReport(0x00, new Uint8Array([0x01]))
+        setTimeout(async () => {
+            await device.sendReport(0x00, new Uint8Array([0x00]))
+        }, 5000)
+
+    } catch (err) {
+        console.error('Failed because of:')
+        console.log(err)
+    }
+
+}
+window.addEventListener('click', hidTest)
+
+
+</script>
+</body>
+</html>
