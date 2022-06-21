@@ -72,7 +72,7 @@ const render = async (time) => {
             ctx.fillStyle = 'rgb(255, 255, 255)'
             ctx.fillRect(0, 0, 30, 30);
             // rising edge, tell the device
-            dev && await dev.sendReport(0, new Uint8Array([0x02]))
+            dev && dev.sendReport(0, new Uint8Array([0x02]))
         }
     }
 
@@ -116,7 +116,7 @@ const render = async (time) => {
                 obs_count++
             }
         })
-        dev && await dev.sendReport(0, new Uint8Array([0x00]))
+        dev && dev.sendReport(0, new Uint8Array([0x00]))
         // trigger data download
         ctx.fillStyle = 'green'
         // huh, font gets reset somehow?
@@ -168,7 +168,6 @@ const deviceSetup = async () => {
     console.log(devices) // should only have one at this point
     dev = devices[0]
     await dev.open()
-    console.log(dev)
     requestAnimationFrame(prestart)
 }
 
