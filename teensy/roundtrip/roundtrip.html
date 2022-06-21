@@ -11,9 +11,9 @@
 <div id="plt" style="width:600px;height:500px;"></div>
 <script>
 
-const repeats = 5000 //
+const repeats = 5000 // number of roundtrip cycles to use
 const period = 50 // milliseconds
-let rep = 0
+let rep = 0 // current repeat
 let t0 = 0 // reference time
 let interval_handle
 let device
@@ -30,7 +30,7 @@ const filter = [{
 
 const pingCallback = () => {
     t0 = performance.now()
-    // all done, break
+    // all done, break and plot
     if (rep >= repeats) {
         clearInterval(interval_handle)
         device.close()
@@ -76,12 +76,13 @@ const rtDelay = async () => {
         const t = performance.now()
         const state = event.data.getUint8(0)
         // should either be 0x02 or 0x04
+        // here, we can compute the browser->MCU->browser duration
         if (state === 0x02) {
             const dt = t - t0
             device.sendReport(0x00, new Uint8Array([0x03]))
             browser_rts[rep] = dt
         } 
-        // if this is the delta time packet from 
+        // The MCU has computed a duration, convert to milliseconds
         else if (state === 0x04) {
             teensy_rts[rep] = event.data.getUint32(1, 1) / 1000;
             rep++
