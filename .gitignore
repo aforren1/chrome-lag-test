@@ -1,5 +1,2 @@
-# Local Netlify folder
-.netlify
-node_modules/
-public/bundle.js
 .vscode/
+.pio/

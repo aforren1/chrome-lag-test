@@ -1,0 +1,106 @@
+<!-- estimate roundtrip delays -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Click to start</title>
+    <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+</head>
+
+<body>
+    <div id="plt" style="width:800px;height:600px;"></div>
+    <script>
+        // https://stackoverflow.com/a/66902484/2690232
+        function linspace(start, stop, num, endpoint = true) {
+            const div = endpoint ? (num - 1) : num;
+            const step = (stop - start) / div;
+            return Array.from({ length: num }, (_, i) => start + step * i);
+        }
+
+        const repeats = 1000 // number of roundtrip cycles to use
+        const period = 13 // milliseconds
+        let rep = 0 // current repeat
+        let t0 = 0 // reference time
+        let interval_handle
+        let device
+
+        let browser_rts = Array(repeats)
+        let teensy_rts = Array(repeats)
+
+        const filter = [{
+            vendorId: 0x16c0,
+            productId: 0x486,
+            usagePage: 0xffab,
+            usage: 0x200
+        }]
+
+        const pingCallback = () => {
+            t0 = performance.now()
+            // all done, break and plot
+            if (rep >= repeats) {
+                clearInterval(interval_handle)
+                device.close()
+                // 
+                let rt1 = {
+                    name: 'browser->MCU->browser',
+                    x: browser_rts.sort(),
+                    y: linspace(0, 1, browser_rts.length, false),
+                    mode: 'lines',
+                    marker: {
+                        color: 'red'
+                    }
+                }
+                let rt2 = {
+                    name: 'MCU->browser->MCU',
+                    x: teensy_rts.sort(),
+                    y: linspace(0, 1, teensy_rts.length, false),
+                    mode: 'lines',
+                    marker: {
+                        color: 'blue'
+                    }
+                }
+
+                let layout = {
+                    // barmode: 'overlay',
+                    xaxis: { title: { text: 'Roundtrip time (ms)' }, range: [-0.1, Math.max(browser_rts.slice(-1)[0], teensy_rts.slice(-1)[0])] },
+                    yaxis: { title: { text: `Empirical Probability (${repeats} samples)` } }
+                }
+                Plotly.newPlot('plt', [rt1, rt2], layout)
+
+                return
+            }
+            device.sendReport(0x00, new Uint8Array([0x01]))
+        }
+
+        const rtDelay = async () => {
+            window.removeEventListener('click', rtDelay)
+            const devices = await navigator.hid.requestDevice({ filters: filter })
+            device = devices[0]
+            await device.open()
+            console.log(device)
+            device.addEventListener('inputreport', async (event) => {
+                const t = performance.now()
+                const state = event.data.getUint8(0)
+                // should either be 0x02 or 0x04
+                // here, we can compute the browser->MCU->browser duration
+                if (state === 0x02) {
+                    const dt = t - t0
+                    device.sendReport(0x00, new Uint8Array([0x03]))
+                    browser_rts[rep] = dt
+                }
+                // The MCU has computed a duration, convert to milliseconds
+                else if (state === 0x04) {
+                    teensy_rts[rep] = event.data.getUint32(1, 1) / 1000;
+                    rep++
+                }
+            })
+
+            interval_handle = setInterval(pingCallback, period)
+        }
+
+        window.addEventListener('click', rtDelay)
+    </script>
+</body>
+
+</html>
