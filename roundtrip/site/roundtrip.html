@@ -19,7 +19,7 @@
         }
 
         const repeats = 1000 // number of roundtrip cycles to use
-        const period = 13 // milliseconds
+        const period = 20 // milliseconds
         let rep = 0 // current repeat
         let t0 = 0 // reference time
         let interval_handle
@@ -63,7 +63,7 @@
 
                 let layout = {
                     // barmode: 'overlay',
-                    xaxis: { title: { text: 'Roundtrip time (ms)' }, range: [-0.1, Math.max(browser_rts.slice(-1)[0], teensy_rts.slice(-1)[0])] },
+                    xaxis: { title: { text: 'Roundtrip time (ms)' }, range: [0, 5] },
                     yaxis: { title: { text: `Empirical Probability (${repeats} samples)` } }
                 }
                 Plotly.newPlot('plt', [rt1, rt2], layout)
