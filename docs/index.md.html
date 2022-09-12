@@ -4,9 +4,19 @@
 Alex Forrence<br>
 September 12, 2022
 
-As part of my [Google Summer of Code 2022 project](https://summerofcode.withgoogle.com/programs/2022/projects/RiwyAVic) to reduce presentation latency in Chrome on Windows, I wanted a way to measure the delay between when something is drawn by the user (e.g. in [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)) and when it actually appears on the screen.
+As part of my [Google Summer of Code 2022 project](https://summerofcode.withgoogle.com/programs/2022/projects/RiwyAVic) to reduce presentation latency in Chrome on Windows, I wanted a way to measure the delay between when something is drawn by the user (e.g. in [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) (rAF)) and when it actually appears on the screen.
 
-# How?
+# Design
+
+I picked a fairly direct route. Using a phototransistor mounted directly to the monitor and a microcontroller (MCU) for communication, we should be able to get an idea of the presentation latency. Thanks to Chromium's support for the [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API), the microcontroller can directly coordinate with the browser.
+
+The general idea is this:
+
+![](lag_diagram.png)
+
+The difference in time between the clock reset and the rising edge of the phototransistor voltage *should* give us the total display latency in the system.
+
+
 
 ## Hardware
 
@@ -17,17 +27,37 @@ I used the following hardware:
  - 1x 10k resistor
  - Misc wires, breadboards, etc. to put it all together
 
+There are probably many other ways to achieve this same basic phenotype (a light-sensitive sensor + a device to interpret that data & communicate with the host computer).
+
 I picked the Teensy 4.0 for a few reasons (beyond already having on hand):
 
  - It's a high-speed USB 2.0 device, meaning it can send & receive data with very low latency.
- - It has an onboard analog to digital converter (which is convenient).
+ - It has an onboard analog to digital converter (ADC), which is convenient.
  - It has an Arduino-compatible API, which makes it relatively easy for non-electronics people to get hooked up.
- - Great software support from Paul (the creator) & community.
+ - Great software support from Paul Stoffregen (the creator) & community. The [forums](https://forum.pjrc.com/) are an excellent resource.
 
-The physical connections are straightforward, mostly boiling down to getting the long & short legs of the phototransistor the right way around (long leg connects to Vcc). ![Here's the basic layout](schem.png width="160px")
+The phototransistor was primarily selected because of:
+
+ - Great rise/fall times (~2 μs, according to the [datasheet](https://cdn-shop.adafruit.com/product-files/2831/HW5P-1_2015__1_.pdf))
+ - Through hole part, so easy to solder/generally manipulate by hand
+ - Minimal supporting circuitry required-- just one resistor!
+
+ ![Circuit schematic](schem.png width="160px") The physical connections are straightforward, mostly boiling down to getting the long & short legs of the phototransistor the right way around (long leg connects to Vcc). This is a [common-collector amplifier](https://www.onsemi.com/pub/Collateral/AN-3005-D.PDF), which has a low voltage output in the dark and high in the light.
+
+The other bit you may want to do is shield the phototransistor from ambient/external light. I've used a (cleaned) bottlecap with holes punched for the phototransistor leads, and that seemed to function well enough. The shield also gives you a surface for attaching tape/other things when mounting the phototransistor to the computer display.
+
+## Software
+
+
+
+## Assessment
+
+### Part 1: Communication Latency
+
+Ideally, the duration of communication between the microcontroller and browser should be minimal (i.e. less than a few milliseconds). Any more may affect our ability to discriminate one frame 
 
 # Alternatives
 
-
+GPUView, ...
 
 <!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
