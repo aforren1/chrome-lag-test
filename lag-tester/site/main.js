@@ -1,8 +1,8 @@
-
+// e.g. http://127.0.0.1:5500/site/index.html?label=default&cycles=100&device=1
 const url_params = new URL(window.location.href).searchParams
 const label = url_params.get('label') ?? 'test'
-const on_frames = url_params.get('on_frames') || 5
-const off_frames = url_params.get('off_frames') || 10
+const on_frames = url_params.get('on_frames') || 3
+const off_frames = url_params.get('off_frames') || 3
 const cycles = url_params.get('cycles') || 20
 const device = url_params.get('device') ?? 0 // use custom device?
 
@@ -78,6 +78,7 @@ const render = async (time) => {
 
     let dt = time - t0
     t0 = time
+    // make dropped frames obvious
     if (dt > 1.5 * median) {
         ctx.fillStyle = 'rgb(255, 255, 0)'
         ctx.fillRect(30, 30, 50, 50)
@@ -138,7 +139,7 @@ const prestart = (time) => {
             ctx.fillStyle = 'rgb(0, 0, 0)'
             ctx.fillRect(0, 0, canvas.width, canvas.height)
             requestAnimationFrame(render)
-            canvas.requestFullscreen()
+            //canvas.requestFullscreen()
         })        
     } else if (frame_counter > 0) {
         dts[frame_counter - 1] = time - t0
