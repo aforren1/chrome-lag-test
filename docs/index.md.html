@@ -60,9 +60,22 @@ The browser must have the WebHID API available to communicate with the microcont
 
 # Assessment
 
-### Part 1: Communication Latency
+### Part 1: Communication Delays
 
-Ideally, the duration of communication between the microcontroller and browser should be minimal (i.e. less than a few milliseconds). Any more may affect our ability to discriminate whether the rising edge of the phototransistor corresponds to one frame or another.
+Ideally, the duration of communication between the microcontroller and browser should be minimal (i.e. less than a few milliseconds). Any more may affect our ability to discriminate whether the rising edge of the phototransistor corresponds to one frame or another. It's difficult to test latency in a single direction without synchronizing the clocks of our two devices, so we'll instead measure the round-trip time and keep the two clocks independent.
+
+![](roundtrip_diagram.png)
+
+We'll compute the round-trip delay in *both* directions, which might give us a sense of any asymmetries in communication delays.
+
+Time to plug in and upload code to the Teensy, and fire up a local server for the test site (under roundtrip/site).
+
+![Beautiful.](roundtrip_screenshot.png)
+
+To kick off the measurement, we need to interact with the webpage. This will trigger the device connection dialog, and we should be able to select the "Teensy RawHID" from the dropdown list. After selection, the 
+
+
+### Part 2: Display Latency
 
 
 
