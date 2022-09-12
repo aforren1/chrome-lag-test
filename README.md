@@ -1,4 +1,6 @@
 
+See https://aforren1.github.io/chrome-lag-test/index.md.html
+
 General idea: we toggle a white square in the upper left corner of the display at some rate (a few Hz) and measure the onset/offset with a phototransistor attached to a microcontroller (MCU). We send a packet to the MCU when entering the `rAF` that will turn the square on, so we can get an idea of the delay between when the computer says the square will appear and when it is physically visible.
 
 The following URL parameters are valid (see src/main.js for the most up-to-date):

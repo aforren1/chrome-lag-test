@@ -4,6 +4,30 @@
 Alex Forrence<br>
 September 12, 2022
 
-Here's some plain text.
+As part of my [Google Summer of Code 2022 project](https://summerofcode.withgoogle.com/programs/2022/projects/RiwyAVic) to reduce presentation latency in Chrome on Windows, I wanted a way to measure the delay between when something is drawn by the user (e.g. in [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)) and when it actually appears on the screen.
+
+# How?
+
+## Hardware
+
+I used the following hardware:
+
+ - 1x [Teensy 4.0](https://www.pjrc.com/store/teensy40.html)
+ - 1x [HW5P-1 phototransistor](https://www.adafruit.com/product/2831)
+ - 1x 10k resistor
+ - Misc wires, breadboards, etc. to put it all together
+
+I picked the Teensy 4.0 for a few reasons (beyond already having on hand):
+
+ - It's a high-speed USB 2.0 device, meaning it can send & receive data with very low latency.
+ - It has an onboard analog to digital converter (which is convenient).
+ - It has an Arduino-compatible API, which makes it relatively easy for non-electronics people to get hooked up.
+ - Great software support from Paul (the creator) & community.
+
+The physical connections are straightforward, mostly boiling down to getting the long & short legs of the phototransistor the right way around (long leg connects to Vcc). ![Here's the basic layout](schem.png width="160px")
+
+# Alternatives
+
+
 
 <!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
