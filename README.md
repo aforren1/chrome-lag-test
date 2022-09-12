@@ -4,7 +4,7 @@ The `roundtrip` directory contains microcontroller code and a sample site to ass
 
 The `lag-tester` directory has code to assess the total display latency of the browser. The general idea is to toggle a white square in the upper-left corner of the display at some low rate, and to signal to the microcontroller whenever the dark -> light transition occurs. By measuring the delay between that signal and the rising edge of a phototransistor attached to the screen (indicating the square is physically visible), we can estimate the total display latency.
 
-The `lag-tester` site can take few parameters (see https://github.com/aforren1/chrome-lag-test/blob/main/lag-tester/site/main.js#L3 for the latest):
+The `lag-tester` site can take a few parameters (see https://github.com/aforren1/chrome-lag-test/blob/main/lag-tester/site/main.js#L3 for the latest):
 
  - `label`: string used to name the output JSON file
  - `on_frames`: number of frames to turn the square white per cycle

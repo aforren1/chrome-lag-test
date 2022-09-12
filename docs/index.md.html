@@ -4,11 +4,11 @@
 Alex Forrence<br>
 September 12, 2022
 
-As part of my [Google Summer of Code 2022 project](https://summerofcode.withgoogle.com/programs/2022/projects/RiwyAVic) to reduce presentation latency in Chrome on Windows, I wanted a way to measure the delay between when something is drawn by the user (e.g. in [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) (rAF)) and when it actually appears on the screen.
+As part of my [Google Summer of Code 2022 project](https://summerofcode.withgoogle.com/programs/2022/projects/RiwyAVic) to reduce presentation latency in Chrome on Windows, I wanted a way to measure the delay between when something is drawn by the user (e.g. in a [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) (rAF) callback) and when it actually appears on the screen.
 
 # Design
 
-I picked a fairly direct route. Using a phototransistor mounted directly to the monitor and a microcontroller (MCU) for communication, we should be able to get an idea of the presentation latency. Thanks to Chromium's support for the [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API), the microcontroller can directly coordinate with the browser.
+Using a phototransistor mounted directly to the monitor and a microcontroller (MCU) for communication, we should be able to get an idea of the presentation latency. Thanks to Chromium's support for the [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API), the microcontroller can directly coordinate with the browser.
 
 The general idea is this:
 
@@ -38,8 +38,8 @@ I picked the Teensy 4.0 for a few reasons (beyond already having on hand):
 
 The phototransistor was primarily selected because of:
 
- - Great rise/fall times (~2 μs, according to the [datasheet](https://cdn-shop.adafruit.com/product-files/2831/HW5P-1_2015__1_.pdf))
- - Through hole part, so easy to solder/generally manipulate by hand
+ - Great rise/fall times (~2 μs, according to the [datasheet](https://cdn-shop.adafruit.com/product-files/2831/HW5P-1_2015__1_.pdf)).
+ - Through hole part-- easy to solder/generally manipulate by hand.
  - Minimal supporting circuitry required-- just one resistor!
 
  ![Circuit schematic](schem.png width="160px") The physical connections are straightforward, mostly boiling down to getting the long & short legs of the phototransistor the right way around (long leg connects to Vcc). This is a [common-collector amplifier](https://www.onsemi.com/pub/Collateral/AN-3005-D.PDF), which has a low voltage output in the dark and high in the light.
@@ -52,7 +52,7 @@ The other bit you may want to do is shield the phototransistor from ambient/exte
 
 The Teensy's toolchain and libraries are installed and managed through [PlatformIO](https://platformio.org/).
 
-The Teensy 4.0 microcontroller is programmed in C++, and uses prepackaged libraries for timing (https://github.com/luni64/TeensyTimerTool) and configuration of the ADC (https://github.com/pedvide/ADC). The Teensy communicates with the host computer using the Raw HID interface, which uses interrupt transfers to move data between the Teensy and computer. This *should* give us great latency performance-- approximately 125 μs one-way. In reality, we may expect to see significantly worse performance than that, depending on the operating system/software (see this [white paper](http://www.embeddedsys.com/subpages/resources/images/documents/InterruptsAndUSB.pdf) for more).
+The Teensy 4.0 microcontroller is programmed in C++, and uses prepackaged libraries for [timing](https://github.com/luni64/TeensyTimerTool) and configuration of the [ADC](https://github.com/pedvide/ADC). The Teensy communicates with the host computer using the Raw HID interface, which uses interrupt transfers to move data between the Teensy and computer. This *should* give us great latency performance-- approximately 125 μs one-way. In reality, we may expect to see significantly worse performance than that, depending on the operating system/software (see this [white paper](http://www.embeddedsys.com/subpages/resources/images/documents/InterruptsAndUSB.pdf) for more).
 
 ### Browser
 
@@ -72,7 +72,7 @@ Time to plug in and upload code to the Teensy, and fire up a local server for th
 
 ![](roundtrip_ecdf.png)
 
-We can see that on my laptop, the majority of round-trip times are less than 2 millisecond (suggesting a naive single-trip time of 1 millisecond). It looks like the MCU-origin round-trip is slightly faster than the browser-origin one, though perhaps not enough to make a meaningful difference. This timing jitter should be acceptable for our measurements, depending on the display refresh rate (60Hz in this case). Other machines may perform better-- for instance, my desktop takes roughly half the time for both measurement types.
+We can see that on my laptop, the majority of round-trip times are less than ~2.5 milliseconds (suggesting a naive single-trip time of ~1.25 milliseconds). It looks like the MCU-origin round-trip is slightly faster than the browser-origin one, though perhaps not enough to make a meaningful difference. This timing jitter should be acceptable for our measurements, depending on the display refresh rate (60Hz in this case). Other machines may perform better-- for instance, my desktop takes roughly half the time for both measurement types.
 
 ### Part 2: Display Latency
 
