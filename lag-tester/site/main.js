@@ -62,7 +62,7 @@ const render = async (time) => {
             on_counter = 0
             cycle_counter++
             ctx.fillStyle = 'rgb(0, 0, 0)'
-            ctx.fillRect(0, 0, 30, 30);
+            ctx.fillRect(0, 0, 80, 80);
         }
     } else {
         off_counter++
@@ -70,7 +70,7 @@ const render = async (time) => {
             is_on = true
             off_counter = 0
             ctx.fillStyle = 'rgb(255, 255, 255)'
-            ctx.fillRect(0, 0, 30, 30);
+            ctx.fillRect(0, 0, 80, 80);
             // rising edge, tell the device
             dev && dev.sendReport(0, new Uint8Array([0x02]))
         }

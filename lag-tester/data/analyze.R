@@ -2,6 +2,7 @@ library(data.table)
 library(ggplot2)
 library(RcppSimdJson)
 
+theme_set(theme_bw())
 load_trace <- function (filename) {
   dat <- as.data.table(fload(filename))
 
@@ -13,8 +14,11 @@ load_trace <- function (filename) {
   dat <- dat[trial != 1]
   
   # look at the raw traces
-  # ggplot(dat, aes(x = sample_counter, y = photo)) + geom_line() +
-  #   facet_wrap(~trial)
+  ggplot(dat, aes(x = sample_counter, y = photo, group=trial)) + 
+    geom_vline(xintercept=seq(1/60, 6/60, 1/60)*1000, linetype='longdash',
+               colour='#f8766d') +
+    geom_line(alpha=0.5, size=1) +
+    labs(x = 'Samples (milliseconds)', y = 'Photosensor voltage (counts)')
   
   # for each trial, find first sample where Δphoto > some threshold (5?)
   dat[, first_thresh := min(which(dphoto > 5)) - 1, by=trial]
