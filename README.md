@@ -9,13 +9,12 @@ The `lag-tester` site can take few parameters (see https://github.com/aforren1/c
  - `label`: string used to name the output JSON file
  - `on_frames`: number of frames to turn the square white per cycle
  - `off_frames`: number of frames to turn the square black per cycle
- - `cycles`: number of cycles to show
+ - `cycles`: number of on-off cycles to show
  - `device`: Expect the recording device? 1 (yes) or 0 (no)
 
-The device is a Teensy 4.0 with a phototransistor connected to one of the analog pins (see the teensy/ folder for code).
+The device is a Teensy 4.0 with a phototransistor connected to one of the analog pins. See the `src/` subdirectories for code (uses PlatformIO to manage build tools/libraries).
 
 This uses the WebHID API, and so will only work on Chromium-derived browsers.
-
 
 TODO:
  - online latency estimation? Probably just need a median smoother for the photosensor to take out the N Hz flicker from the display? Otherwise looks like a pretty clean signal

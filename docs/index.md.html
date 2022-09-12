@@ -68,19 +68,28 @@ Ideally, the duration of communication between the microcontroller and browser s
 
 We'll compute the round-trip delay in *both* directions, which might give us a sense of any asymmetries in communication delays.
 
-Time to plug in and upload code to the Teensy, and fire up a local server for the test site (under roundtrip/site).
+Time to plug in and upload code to the Teensy, and fire up a local server for the test site (under roundtrip/site). To kick off the measurement, we need to interact with the webpage. This will trigger the device connection dialog, and we should be able to select the "Teensyduino RawHID" from the dropdown list. After selection, the website and Teensy will communicate a number of times, and you should eventually see a plot like this:
 
-![Beautiful.](roundtrip_screenshot.png)
+![](roundtrip_ecdf.png)
 
-To kick off the measurement, we need to interact with the webpage. This will trigger the device connection dialog, and we should be able to select the "Teensy RawHID" from the dropdown list. After selection, the 
-
+We can see that on my laptop, the majority of round-trip times are less than 2 millisecond (suggesting a naive single-trip time of 1 millisecond). It looks like the MCU-origin round-trip is slightly faster than the browser-origin one, though perhaps not enough to make a meaningful difference. This timing jitter should be acceptable for our measurements, depending on the display refresh rate (60Hz in this case). Other machines may perform better-- for instance, my desktop takes roughly half the time for both measurement types.
 
 ### Part 2: Display Latency
 
+![The phototransistor is taped to the upper dleft corner of the screen.](real_setup.jpeg width="160px") Onto the main event: display latency. The phototransistor now comes into play, and the overall design is as described [earlier](index.md.html#Design). After updating the Teensy's firmware with the `lag-tester` code, we can run this test. This one takes two interactions (when the device is enabled): one to connect to the Teensy, and the second to start the testing session. At the end, the page produces a JSON file containing raw timestamps, sample counts, and phototransistor measurements. As a first pass, I have been doing data processing in R (see `lag-tester/data` for sample data and analysis script), but this could be done in the browser in the future.
 
+The raw traces we get from the microcontroller look something like:
 
-# Alternatives
+![One sample session of ~200 cycles. The dark traces are raw voltages from the phototransistor, and are aligned to the start of the cycle. The dashed vertical lines represent "ideal" VSYNC times, given a 60Hz display. In this example, the white square was visible for three frames.](raw_traces.png)
 
-GPUView, ...
+Note that the phototransistor traces very closely align with the estimated VSYNC times, which makes it relatively straightforward to infer which frame the image was visible on. In this case, it looks like te presentation delay varied between one and two frames. The traces are not very noisy in this case, but some cleaning/extra processing *may* be necessary depending on the display (e.g. my desktop display has a 60Hz flicker).
+
+# Closing Thoughts
+
+Hopefully this was a useful overview of one way to measure presentation latency (in Chromium). Feel free to send feedback/questions. See the [repository](https://github.com/aforren1/chrome-lag-test) for the code and documentation (including this site).
+
+Other thoughts:
+
+ - Can latency be inferred from DXGI frame statistics/is this any better than our method, esp. if the application can infer whether the DWM is active or not?
 
 <!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://morgan3d.github.io/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
